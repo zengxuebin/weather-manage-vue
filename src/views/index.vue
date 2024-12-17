@@ -35,7 +35,7 @@
             <template #title>
               <div style="display: inline-flex; align-items: center; font-size: 14px;">
                 累计预警条数
-                <el-tooltip effect="dark" content="从2023年1月1日至今系统推送的预警信息数量" placement="top">
+                <el-tooltip effect="dark" content="从2024年1月1日至今系统推送的预警信息数量" placement="top">
                   <el-icon style="margin-left: 4px" :size="14">
                     <Warning />
                   </el-icon>
@@ -63,7 +63,7 @@
             <template #title>
               <div style="display: inline-flex; align-items: center; font-size: 14px;">
                 累计气象站点
-                <el-tooltip effect="dark" content="从2023年1月1日至今系统存在的所有气象站点" placement="top">
+                <el-tooltip effect="dark" content="从2024年1月1日至今系统存在的所有气象站点" placement="top">
                   <el-icon style="margin-left: 4px" :size="14">
                     <Warning />
                   </el-icon>
@@ -91,7 +91,7 @@
             <template #title>
               <div style="display: inline-flex; align-items: center; font-size: 14px;">
                 累计气象数据总数
-                <el-tooltip effect="dark" content="从2023年1月1日至今气象站点采集的所有气象数据总和" placement="top">
+                <el-tooltip effect="dark" content="从2024年1月1日至今气象站点采集的所有气象数据总和" placement="top">
                   <el-icon style="margin-left: 4px" :size="14">
                     <Warning />
                   </el-icon>
@@ -143,7 +143,7 @@
                   今日日期
                 </div>
               </template>
-              2023-05-20
+              2024-05-20
             </el-descriptions-item>
             <el-descriptions-item>
               <template #label>
@@ -288,7 +288,7 @@ import TodayEcharts from '@/components/echarts/index.vue'
 
 const options = {
   title: {
-    text: '2023-05-20'
+    text: '2024-05-20'
   },
   tooltip: {
     trigger: 'axis',

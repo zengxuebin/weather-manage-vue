@@ -5,7 +5,7 @@
           <img class="logo" src="@/assets/logo/logo.png">
         </el-col>
         <el-col :span="14">
-          <h1 class="title">气象信息智慧监测管理系统</h1>
+          <h1 class="title">气象信息档案管理系统</h1>
         </el-col>
         <el-col :span="8">
           <UserContainer></UserContainer>

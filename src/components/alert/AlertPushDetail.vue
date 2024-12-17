@@ -283,17 +283,17 @@ const handleAlertDetails = () => {
 
 const tableData = [
   {
-    date: '2023-05-20 13:24:40',
+    date: '2024-05-20 13:24:40',
     name: 'admin',
     address: '系统触发',
   },
   {
-    date: '2023-05-20 13:26:28',
+    date: '2024-05-20 13:26:28',
     name: 'admin',
     address: '已发布',
   },
   {
-    date: '2023-05-20 13:27:12',
+    date: '2024-05-20 13:27:12',
     name: 'admin',
     address: '已推送',
   },

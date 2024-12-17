@@ -119,7 +119,7 @@ countStation().then(res => {
   });
 })
 
-const dateRange = '数据自2023-01-01至' + XEUtils.toDateString(new Date(), 'yyyy-MM-dd')
+const dateRange = '数据自2024-01-01至' + XEUtils.toDateString(new Date(), 'yyyy-MM-dd')
 
 const nowCity = ref('南昌市')
 

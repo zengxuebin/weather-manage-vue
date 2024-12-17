@@ -6,7 +6,7 @@
           <img class="logo" src="@/assets/logo/logo.png">
         </el-col>
         <el-col :span="14">
-          <h1 class="title">气象信息智慧监测管理系统</h1>
+          <h1 class="title">气象信息档案管理系统</h1>
         </el-col>
         <el-col :span="8">
           <div style="text-align: center;">24小时客服热线: <span class="text">123456</span></div>
@@ -62,7 +62,7 @@
       </div>
       <!--  底部  -->
       <div class="el-login-footer">
-        <span>Copyright © 2023 ecjtu-software All Rights Reserved.</span>
+        <span>Copyright © 2024 weather All Rights Reserved.</span>
       </div>
     </el-main>
   </el-container>

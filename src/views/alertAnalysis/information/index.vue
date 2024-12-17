@@ -113,7 +113,7 @@ const rowClassName: VxeTablePropTypes.RowClassName = ({ rowIndex }) => {
   return 'col-grey'
 }
 
-const dateRange = '数据自2023-01-01至' + XEUtils.toDateString(new Date(), 'yyyy-MM-dd')
+const dateRange = '数据自2024-01-01至' + XEUtils.toDateString(new Date(), 'yyyy-MM-dd')
 </script>
 
 <style lang="scss" scoped>

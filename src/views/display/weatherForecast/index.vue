@@ -66,7 +66,7 @@ import { getForecastWeather } from "@/api/weatherForecast"
 import XEUtils from 'xe-utils'
 import axios from 'axios'
 
-const weatherTitle = '7日内天气预报（2023/05/09 12:00发布）'
+const weatherTitle = '7日内天气预报（2024/05/09 12:00发布）'
 const activeName = ref<any>(XEUtils.toDateString(XEUtils.getWhatDay(new Date(), 1), 'yyyy-MM-dd'))
 XEUtils.setup({
   formatStringMatchs: {

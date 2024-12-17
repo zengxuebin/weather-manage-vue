@@ -31,7 +31,7 @@
     <el-card class="today-card">
       <template #header>
         <div>
-          <span>历史天气（数据库天气数据始于2023-01-01）</span>
+          <span>历史天气（数据库天气数据始于2024-01-01）</span>
         </div>
       </template>
       <el-row :gutter="16" style="text-align: center;">
