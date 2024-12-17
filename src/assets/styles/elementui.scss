@@ -1,0 +1,32 @@
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'white': #ffffff,
+    'black': #000000,
+    'primary': (
+      'base': #00796a,
+    ),
+    'success': (
+      'base': #2bbd5b,
+    ),
+    'warning': (
+      'base': #FF9900,
+    ),
+    'danger': (
+      'base': #e94547,
+    ),
+    'error': (
+      'base': #e94547,
+    ),
+    'info': (
+      'base': #909399,
+    ),
+  ),
+);
+
+@use "element-plus/theme-chalk/src/index.scss" as *;
+
+.today-card .el-card__header {
+  border-left: #00796a solid 5px;
+  background-color: #c9d9d6;
+  font-weight: bold;
+}

@@ -1,0 +1,39 @@
+// 修改样式变量
+$vxe-font-size: 14px;
+$vxe-font-color: #666;
+$vxe-primary-color: #00796a;
+$vxe-table-font-color: $vxe-font-color;
+$vxe-table-border-color: #e8eaec;
+$vxe-table-border-radius: 4px;
+
+.alert-table .vxe-body--column.col-red {
+  color: #c63f34;
+}
+
+.alert-table .vxe-body--column.col-orange {
+  color: #f2a747;
+}
+
+.alert-table .vxe-body--column.col-yellow {
+  color: #f6bd0e;
+}
+
+.alert-table .vxe-body--column.col-blue {
+  color: #4064f6;
+}
+
+.alert-expand-table .vxe-body--row.col-grey {
+  background-color: #eeeeee;
+}
+
+.cell-click {
+  color: #00796a;
+  cursor: pointer;
+}
+
+.first-field {
+  background-color: #f5f7fa;
+}
+
+// 引入vxe-table库的样式文件
+@import 'vxe-table/styles/index.scss';
