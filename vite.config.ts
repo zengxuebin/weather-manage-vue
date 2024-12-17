@@ -14,10 +14,10 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     proxy: {
-      '/weather-monitor': {
-        target: 'http://localhost:8080/weather-monitor/',
+      '/weather': {
+        target: 'http://localhost:8080/weather/',
         changeOrigin: true,
-        rewrite: (p) => p.replace(/^\/weather-monitor/, '')
+        rewrite: (p) => p.replace(/^\/weather/, '')
       }
     }
   }

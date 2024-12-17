@@ -1,5 +1,5 @@
 {
-  "name": "weather-monitor-ui",
+  "name": "weather-manager-vue",
   "version": "0.0.0",
   "private": true,
   "scripts": {

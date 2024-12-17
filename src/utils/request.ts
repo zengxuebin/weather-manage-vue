@@ -28,7 +28,7 @@ declare module "axios" {
 // 创建实例
 const service = axios.create({
   // 请求地址
-  baseURL: '/weather-monitor',
+  baseURL: '/weather',
   // 超时
   timeout: 10000,
 });
