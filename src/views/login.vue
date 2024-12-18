@@ -50,13 +50,6 @@
               <span v-if="!loading">登 录</span>
               <span v-else>登 录 中...</span>
             </el-button>
-            <div class="other-tips">
-              <el-row class="row-bg" justify="end">
-                <el-col :span="12" style="text-align: left;"><a href="#">忘记密码？</a></el-col>
-                <el-col :span="12" style="text-align: right;"><span>还没有登录账号？</span>
-                  <a href="#">注册账号</a></el-col>
-              </el-row>
-            </div>
           </div>
         </el-form>
       </div>
@@ -176,7 +169,7 @@ getCode()
   margin: auto;
   padding: 20px 50px;
   width: 400px;
-  height: 420px;
+  height: 400px;
   background-color: #fff;
   border-radius: 10px;
 }
