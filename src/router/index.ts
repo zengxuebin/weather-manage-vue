@@ -62,16 +62,6 @@ export const routes = [
         component: () => import('@/views/acquisition/collect/index.vue')
       },
       {
-        path: '/acquisition/location',
-        name: 'Location',
-        hidden: false,
-        meta: {
-          title: '站点分布',
-          icon: 'vxe-icon-location-fill'
-        },
-        component: () => import('@/views/acquisition/location/index.vue')
-      },
-      {
         path: '/acquisition/weatherStation',
         name: 'weatherStation',
         hidden: false,
@@ -258,7 +248,7 @@ export const routes = [
         name: 'Menu',
         hidden: false,
         meta: {
-          title: '菜单管理',
+          title: '菜单预览',
           icon: 'vxe-icon-menu'
         },
         component: () => import('@/views/system/menu/index.vue')
@@ -268,7 +258,7 @@ export const routes = [
         name: 'Role',
         hidden: false,
         meta: {
-          title: '角色管理',
+          title: '角色预览',
           icon: 'vxe-icon-user-fill'
         },
         component: () => import('@/views/system/role/index.vue')

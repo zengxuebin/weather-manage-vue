@@ -181,25 +181,6 @@ const gridOptions = reactive<VxeGridProps>({
     ]
   },
   toolbarConfig: {
-    buttons: [
-      {
-        status: 'primary',
-        name: '新增',
-        icon: 'vxe-icon-add'
-      },
-      {
-        status: 'primary',
-        name: '编辑',
-        icon: 'vxe-icon-edit'
-      },
-      // 删除选中行；会自动触发 ajax.delete 方法
-      {
-        code: 'delete',
-        status: 'danger',
-        name: '删除',
-        icon: 'vxe-icon-delete'
-      },
-    ],
     refresh: true, // 显示刷新按钮
     export: true, // 显示导出按钮
     zoom: true, // 显示全屏按钮

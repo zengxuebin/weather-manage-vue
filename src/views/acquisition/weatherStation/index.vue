@@ -5,10 +5,50 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import type { VXETable, VxeGridInstance, VxeGridProps } from 'vxe-table'
 import { getPageStation, getAllCity } from "@/api/weatherStation"
-import XEUtils from 'xe-utils'
+import { provinceAndCityData } from 'element-china-area-data'
+import { toNumber } from 'xe-utils'
+
+// 省市联动
+const formData = reactive({
+  stationProvince: '',
+  stationCity: ''
+})
+console.log(provinceAndCityData)
+const provinces = Object.keys(provinceAndCityData).map(key => ({
+  value: provinceAndCityData[toNumber(key)].value,
+  label: provinceAndCityData[toNumber(key)].label
+}))
+console.log(provinces)
+
+const cities = ref([])
+const handleProvinceChange = ({ data, field }) => {
+  const selectedProvinceValue = data[field]
+  console.log('省份选择变化:', selectedProvinceValue);
+
+  if (selectedProvinceValue) {
+    const selectedProvince = provinceAndCityData.find(province => province.value === selectedProvinceValue)
+    if (selectedProvince && selectedProvince.children) {
+      formData.stationCity = selectedProvince.label
+      cities.value = selectedProvince.children
+    } else {
+      cities.value = []
+    }
+  } else {
+    cities.value = []
+  }
+  const { formConfig } = gridOptions
+  if (formConfig && formConfig.items) {
+    const stationTypeItem = formConfig.items[1]
+    if (stationTypeItem && stationTypeItem.itemRender) {
+      stationTypeItem.itemRender.options = cities.value
+      console.log(stationTypeItem.itemRender.options);
+    }
+  }
+
+}
 
 const xGrid = ref<VxeGridInstance>()
 
@@ -71,14 +111,15 @@ const gridOptions = reactive<VxeGridProps>({
         span: 6,
         itemRender: {
           name: '$select',
-          options: [
-            { label: '江西省', value: '江西省' }
-          ],
+          options: provinces,
           props: {
             placeholder: '请选择所在省份',
           },
-          defaultValue: '江西省'
-        }
+          defaultValue: '',
+          events: {
+            change: handleProvinceChange
+          }
+        },
       },
       {
         field: 'stationCity',
@@ -86,7 +127,7 @@ const gridOptions = reactive<VxeGridProps>({
         span: 6,
         itemRender: {
           name: '$select',
-          options: [],
+          options: cities.value,
           props: {
             placeholder: '请选择所在城市',
           }
@@ -176,12 +217,14 @@ const gridOptions = reactive<VxeGridProps>({
             queryParams.order = firstSort.order
           }
           // 请求参数
+          const selectedProvince = provinceAndCityData.find(province => province.value === form.stationProvince)
+          const selectedCity = cities.value.find(province => province.value === form.stationCity)
           const data = {
             pageNum: page.currentPage,
             pageSize: page.pageSize,
             entity: {
-              stationProvince: form.stationProvince,
-              stationCity: form.stationCity,
+              stationProvince: selectedProvince?.label,
+              stationCity: selectedCity?.label,
               stationType: form.stationType,
             }
           }
@@ -278,31 +321,13 @@ const gridOptions = reactive<VxeGridProps>({
 })
 
 onMounted(() => {
-
-  const { formConfig } = gridOptions
-
   const stationTypeList = [
     { label: '基准站', value: '基准站' },
     { label: '基本站', value: '基本站' },
     { label: '一般站', value: '一般站' },
   ]
-  getAllCity().then(res => {
-    const data = res.data
-    let stationCityList: any[] = []
-    data.forEach((item: any) => {
-      stationCityList.push({
-        label: item.station_city,
-        value: item.station_city
-      })
-    })
-    if (formConfig && formConfig.items) {
-      const stationCityItem = formConfig.items[1]
-      if (stationCityItem && stationCityItem.itemRender) {
-        stationCityItem.itemRender.options = stationCityList
-      }
-    }
-  })
 
+  const { formConfig } = gridOptions
   if (formConfig && formConfig.items) {
     const stationTypeItem = formConfig.items[2]
     if (stationTypeItem && stationTypeItem.itemRender) {
