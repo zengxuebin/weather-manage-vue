@@ -189,68 +189,6 @@
               </template>
               0.09%
             </el-descriptions-item>
-            <el-descriptions-item>
-              <template #label>
-                <div class="cell-item">
-                  <el-icon>
-                    <WindPower />
-                  </el-icon>
-                  风速风向
-                </div>
-              </template>
-              21.61m/s 东南
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template #label>
-                <div class="cell-item">
-                  <el-icon>
-                    <Pouring />
-                  </el-icon>
-                  降水数据
-                </div>
-              </template>
-              0
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template #label>
-                <div class="cell-item">
-                  <i class="vxe-icon-eye-fill"></i>
-                  平均能见度
-                </div>
-              </template>
-              25
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template #label>
-                <div class="cell-item">
-                  <i class="vxe-icon-indicator"></i>
-                  紫外线指数
-                </div>
-              </template>
-              最弱
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template #label>
-                <div class="cell-item">
-                  <el-icon>
-                    <Sunset />
-                  </el-icon>
-                  舒适度指数
-                </div>
-              </template>
-              温暖
-            </el-descriptions-item>
-            <el-descriptions-item>
-              <template #label>
-                <div class="cell-item">
-                  <el-icon>
-                    <Pouring />
-                  </el-icon>
-                  感冒指数
-                </div>
-              </template>
-              极易发
-            </el-descriptions-item>
           </el-descriptions>
         </el-card>
       </el-col>
@@ -261,21 +199,7 @@
               <span>24小时天气速递</span>
             </div>
           </template>
-          <TodayEcharts :options="options" height="320px"></TodayEcharts>
-        </el-card>
-        <el-card class="today-card" style="margin-top: 22px;">
-          <template #header>
-            <div>
-              <span>接收预警消息预览</span>
-            </div>
-          </template>
-          <el-descriptions border :column="5">
-            <el-descriptions-item label="白色">0</el-descriptions-item>
-            <el-descriptions-item label="蓝色">0</el-descriptions-item>
-            <el-descriptions-item label="黄色">0</el-descriptions-item>
-            <el-descriptions-item label="橙色">0</el-descriptions-item>
-            <el-descriptions-item label="红色">0</el-descriptions-item>
-          </el-descriptions>
+          <TodayEcharts :options="options" height="260px"></TodayEcharts>
         </el-card>
       </el-col>
     </el-row>

@@ -42,8 +42,8 @@ export const routes = [
     ]
   },
   {
-    path: '/acquisition',
-    name: 'Acquisition',
+    path: '/acquist',
+    name: 'Acquisit',
     hidden: false,
     meta: {
       title: '气象管理',
@@ -56,8 +56,30 @@ export const routes = [
         name: 'Collect',
         hidden: false,
         meta: {
-          title: '数据管理',
+          title: '气象采集',
           icon: 'vxe-icon-cloud-upload'
+        },
+        component: () => import('@/views/acquisition/collect/index.vue')
+      },
+    ]
+  },
+  {
+    path: '/manager',
+    name: 'Manager',
+    hidden: false,
+    meta: {
+      title: '气象管理',
+      icon: 'vxe-icon-sort'
+    },
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/manager/Acquisition',
+        name: 'Acquisition',
+        hidden: false,
+        meta: {
+          title: '气象管理',
+          icon: 'vxe-icon-chart-line'
         },
         component: () => import('@/views/acquisition/collect/index.vue')
       },

@@ -2,7 +2,7 @@
   <div style="overflow: hidden; width: 100%; height: 100%;">
     <vxe-grid ref='xGrid' v-bind="gridOptions">
       <template #toolbar_buttons>
-        <vxe-button status="primary" icon="vxe-icon-add" @click="collectData">采集</vxe-button>
+        <vxe-button status="primary" icon="vxe-icon-cloudy" @click="collectData">采集</vxe-button>
         <vxe-button status="primary" icon="vxe-icon-edit">编辑</vxe-button>
         <vxe-button status="danger" icon="vxe-icon-delete">删除</vxe-button>
       </template>
@@ -43,7 +43,7 @@ getAllStation().then(res => {
 const collectData = () => {
   ElMessageBox.confirm(
     '此操作将采集此刻所有气象站的气象数据，是否继续？',
-    '数据采集',
+    '采集',
     {
       confirmButtonText: '继续',
       cancelButtonText: '取消',
