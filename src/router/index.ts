@@ -61,8 +61,20 @@ export const routes = [
         },
         component: () => import('@/views/acquisition/collect/index.vue')
       },
+    ]
+  },
+  {
+    path: '/station',
+    name: 'station',
+    hidden: false,
+    meta: {
+      title: '气象管理',
+      icon: 'vxe-icon-sort'
+    },
+    component: () => import('@/layout/index.vue'),
+    children: [
       {
-        path: '/acquisition/weatherStation',
+        path: '/station/weatherStation',
         name: 'weatherStation',
         hidden: false,
         meta: {
@@ -118,88 +130,24 @@ export const routes = [
     ]
   },
   {
-    path: '/alert-manager',
-    name: 'alertManager',
+    path: '/log',
+    name: 'log',
     hidden: false,
     meta: {
-      title: '预警管理',
-      icon: 'vxe-icon-bell-fill'
+      title: '日志',
+      icon: 'vxe-icon-chart-radar'
     },
     component: () => import('@/layout/index.vue'),
     children: [
       {
-        path: '/alert-manager/release-alert',
-        name: 'alertRelease',
+        path: '/log/operate',
+        name: 'log-operate',
         hidden: false,
         meta: {
-          title: '预警信息发布',
-          icon: 'vxe-icon-send-fill'
+          title: '操作日志',
+          icon: 'vxe-icon-feedback'
         },
-        component: () => import('@/views/alertManager/alertRelease/index.vue')
-      },
-      {
-        path: '/alert-manager/alert-rule',
-        name: 'alertRule',
-        hidden: false,
-        meta: {
-          title: '预警规则配置',
-          icon: 'vxe-icon-setting-fill'
-        },
-        component: () => import('@/views/alertManager/alertRule/index.vue')
-      },
-      {
-        path: '/alert-manager/view-alert',
-        name: 'ViewAlert',
-        hidden: false,
-        meta: {
-          title: '预警信息查询',
-          icon: 'vxe-icon-search'
-        },
-        component: () => import('@/views/alertManager/viewAlert/index.vue')
-      },
-    ]
-  },
-  {
-    path: '/alert-push',
-    name: 'alertPush',
-    hidden: false,
-    meta: {
-      title: '预警推送',
-      icon: 'vxe-icon-flow-branch'
-    },
-    component: () => import('@/layout/index.vue'),
-    children: [
-      {
-        path: '/alert-push/push-alert',
-        name: 'pushAlert',
-        hidden: false,
-        meta: {
-          title: '预警信息推送',
-          icon: 'vxe-icon-envelope'
-        },
-        component: () => import('@/views/alertPush/pushAlert/index.vue')
-      },
-    ]
-  },
-  {
-    path: '/alert-analysis',
-    name: 'alertAnalysis',
-    hidden: false,
-    meta: {
-      title: '预警分析',
-      icon: 'vxe-icon-chart-line'
-    },
-    component: () => import('@/layout/index.vue'),
-    children: [
-      {
-        path: '/alert-analysis/view-alert-push',
-        name: 'viewAlert',
-        hidden: isAdmin.value === 'admin',
-        meta: {
-          title: '查询预警信息',
-          icon: 'vxe-icon-search'
-        },
-        component: () => import('@/views/alertAnalysis/viewAlert/index.vue')
+        component: () => import('@/views/system/role/index.vue')
       },
     ]
   },

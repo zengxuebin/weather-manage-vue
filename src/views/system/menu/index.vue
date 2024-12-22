@@ -11,7 +11,6 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import type { VXETable, VxeGridInstance, VxeGridProps } from 'vxe-table'
-import XEUtils from 'xe-utils'
 import { getPageMenu } from "@/api/menu"
 
 const xGrid = ref<VxeGridInstance>()
@@ -238,12 +237,6 @@ const gridOptions = reactive<VxeGridProps>({
     }
   },
   columns: [
-    {
-      type: 'checkbox',
-      width: 60,
-      align: "center",
-      fixed: 'left',
-    },
     {
       type: 'seq',
       title: '序号',
