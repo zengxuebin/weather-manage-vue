@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
 import type { VxeGridInstance, VxeGridProps } from 'vxe-table'
 import { getPageUser, addUser, updateUser, deleteUser, batchDeleteUser } from '@/api/system/user'
