@@ -14,18 +14,36 @@
     <el-dialog v-model="dialogFormVisible" :title=title width="500" align-center @closed="resetForm">
       <el-form ref="ruleFormRef" style="max-width: 500px" :model="userForm" :rules="rules" label-width="auto"
         status-icon>
+        <el-form-item label="所属部门" prop="deptId">
+          <el-select v-model="userForm.deptId" placeholder="请选择所属部门">
+            <el-option label="数据监控中心" value="100" />
+            <el-option label="用户中心" value="101" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="userForm.username" placeholder="请输入用户名" />
+          <el-input v-model="userForm.username" :disabled="pwdDisabled" placeholder="请输入用户名" />
+        </el-form-item>
+        <el-form-item label="用户昵称" prop="nickname">
+          <el-input v-model="userForm.nickname" placeholder="请输入用户昵称（不输与用户名保持一致）" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="userForm.password" :disabled="pwdDisabled" class="pwd" placeholder="请输入密码"
+          <el-input v-model="userForm.password" type="password" :disabled="pwdDisabled" class="pwd" placeholder="请输入密码"
             autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="userForm.phone" placeholder="请输入手机号" />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="userForm.email" placeholder="请输入邮箱" />
         </el-form-item>
-        <el-form-item label="手机号" prop="phoneNumber">
-          <el-input v-model="userForm.phoneNumber" placeholder="请输入手机号" />
+        <el-form-item label="用户性别" prop="sex">
+          <el-radio-group v-model="userForm.sex">
+            <el-radio value="0">男</el-radio>
+            <el-radio value="1">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="是否启用" prop="status">
+          <el-switch v-model="userForm.status" active-value="0" inactive-value="1" />
         </el-form-item>
         <div class="footer">
           <el-button type="primary" @click="submitForm(ruleFormRef)">
@@ -53,31 +71,35 @@ let operateType = ''
 const ruleFormRef = ref<FormInstance>()
 
 interface UserForm {
-  id: string,
   deptId: string,
   username: string,
+  nickname: string,
   password: string,
+  phone: string,
   email: string,
-  phoneNumber: string,
+  sex: string,
+  status: string,
 }
 
 const userForm = reactive<UserForm>({
-  id: '',
   deptId: '',
   username: '',
+  nickname: '',
   password: '',
+  phone: '',
   email: '',
-  phoneNumber: '',
+  sex: '0',
+  status: '0',
 })
 
 const resetForm = () => {
-  userForm.id = ''
-  userForm.id = ''
   userForm.deptId = ''
   userForm.username = ''
+  userForm.nickname = ''
   userForm.password = ''
+  userForm.phone = ''
   userForm.email = ''
-  userForm.phoneNumber = ''
+  userForm.status = '0'
 }
 
 const rules = reactive<FormRules<UserForm>>({
@@ -91,7 +113,10 @@ const rules = reactive<FormRules<UserForm>>({
     { required: true, message: '请输入密码', trigger: 'blur' },
   ],
   email: [
-    { type: 'email', message: '请输入正确的邮箱', trigger: 'blur' },
+    { required: true, type: 'email', message: '请输入正确的邮箱', trigger: 'blur' },
+  ],
+  phone: [
+    { required: true, message: '请输入手机号', trigger: 'blur' },
   ],
 })
 
@@ -103,7 +128,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       if (operateType === 'add') {
         addUser(userForm).then(res => {
           dialogFormVisible.value = false
-          xGrid.value.commitProxy('query')
+          if (xGrid.value) {
+            xGrid.value.commitProxy('query')
+          }
           ElMessage({
             message: '新增用户成功',
             type: 'success',
@@ -112,7 +139,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       } else if (operateType === 'update') {
         updateUser(userForm).then(res => {
           dialogFormVisible.value = false
-          xGrid.value.commitProxy('query')
+          if (xGrid.value) {
+            xGrid.value.commitProxy('query')
+          }
           ElMessage({
             message: '更新用户成功',
             type: 'success',
@@ -133,6 +162,7 @@ const addData = () => {
   title.value = '新增用户'
   operateType = 'add'
   dialogFormVisible.value = true
+  pwdDisabled.value = false
   console.log('add')
 }
 
@@ -148,10 +178,12 @@ const removeRow = (row: any) => {
     }
   )
     .then(() => {
-      console.log(row.id);
+      console.log(row.userId);
 
-      deleteUser(row.id).then(res => {
-        xGrid.value.commitProxy('query')
+      deleteUser(row.userId).then(res => {
+        if (xGrid.value) {
+          xGrid.value.commitProxy('query')
+        }
         ElMessage({
           type: 'success',
           message: '删除用户成功！',
@@ -183,14 +215,16 @@ const deleteData = () => {
           let userIds: any[] = []
           rows.forEach(item => {
             console.log(item);
-            userIds.push(item.id)
+            userIds.push(item.userId)
           })
           batchDeleteUser(userIds).then(res => {
             ElMessage({
               type: 'success',
               message: '删除所选用户成功！',
             })
-            xGrid.value.commitProxy('query')
+            if (xGrid.value) {
+              xGrid.value.commitProxy('query')
+            }
           })
         })
         .catch(() => {
@@ -213,15 +247,17 @@ const editData = (row: any) => {
   operateType = 'update'
   dialogFormVisible.value = true
   pwdDisabled.value = true
-  userForm.id = row.id
-  userForm.username = row.username
   userForm.deptId = row.deptId
-  userForm.email = row.email
-  userForm.phoneNumber = row.phoneNumber
+  userForm.username = row.username
+  userForm.nickname = row.nickname
   userForm.password = row.password
+  userForm.phone = row.phone
+  userForm.email = row.email
+  userForm.sex = row.sex
+  userForm.status = row.status
 }
 
-const xGrid = ref<VxeGridInstance>()
+const xGrid = ref<VxeGridInstance | null>(null);
 
 const gridOptions = reactive<VxeGridProps>({
   border: true,
@@ -298,13 +334,17 @@ const gridOptions = reactive<VxeGridProps>({
         }
       },
       {
-        field: 'nickname',
-        title: '用户昵称',
+        field: 'status',
+        title: '用户状态',
         span: 6,
         itemRender: {
-          name: '$input',
+          name: '$select',
+          options: [
+            { label: '启用', value: '0' },
+            { label: '停用', value: '1' },
+          ],
           props: {
-            placeholder: '请输入用户昵称'
+            placeholder: '请选择用户状态'
           }
         }
       },
@@ -333,15 +373,15 @@ const gridOptions = reactive<VxeGridProps>({
         }
       },
       {
-        field: 'deptName',
+        field: 'deptId',
         title: '所在部门',
         span: 6,
         folding: true,
         itemRender: {
           name: '$select',
           options: [
-            { label: '数据监测中心', value: '数据监测中心' },
-            { label: '用户中心', value: '用户中心' },
+            { label: '数据监测中心', value: '100' },
+            { label: '用户中心', value: '101' },
           ],
           props: {
             placeholder: '请选择所在部门'
@@ -418,6 +458,12 @@ const gridOptions = reactive<VxeGridProps>({
             pageNum: page.currentPage,
             pageSize: page.pageSize,
             entity: {
+              username: form.username,
+              sex: form.sex,
+              status: form.status,
+              phone: form.phone,
+              email: form.email,
+              deptId: form.deptId,
             }
           }
           console.log(data);
@@ -533,6 +579,15 @@ const gridOptions = reactive<VxeGridProps>({
       title: '更新时间',
       align: "center",
       width: 180,
+    },
+    {
+      title: '操作',
+      align: "center",
+      width: 200,
+      fixed: 'right',
+      slots: {
+        default: 'operate'
+      }
     },
   ],
   checkboxConfig: {

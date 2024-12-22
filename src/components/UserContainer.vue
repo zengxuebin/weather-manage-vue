@@ -9,7 +9,7 @@
       <el-avatar size="small" :src="circleUrl" class="avatar" />
       <el-dropdown class="el-dropdown-container">
         <span class="el-dropdown-link">
-          <span>{{ userStore.user.username }}</span>
+          <span>{{ userStore.user.nickname }}</span>
           <el-icon>
             <arrow-down />
           </el-icon>

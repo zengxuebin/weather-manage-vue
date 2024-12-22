@@ -63,15 +63,6 @@ service.interceptors.response.use(res => {
   }
 
   if (code === 601) {
-    // 关闭之前的通知
-    ElNotification.closeAll();
-    res.data.data.forEach((item: any) => {
-      ElNotification({
-        title: 'Success',
-        message: '已将预警信息推送至' + item.nickname + '的邮箱和短信中',
-        type: 'success',
-      })
-    })
     return Promise.resolve(msg)
   }
 
