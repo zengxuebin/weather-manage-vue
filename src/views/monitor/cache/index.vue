@@ -88,6 +88,13 @@ const gridOptions = reactive<VxeGridProps>({
     // 带背景颜色
     background: true,
   },
+  cellStyle({ row, column }) {
+    if (column.field === 'dictType') {
+      return {
+        color: '#00796a',
+      }
+    }
+  },
   formConfig: {
     titleAlign: 'right',
     //是否显示标题冒号
@@ -227,20 +234,20 @@ const gridOptions = reactive<VxeGridProps>({
       field: 'dictName',
       title: '字典名称',
       align: "center",
-      width: 120,
+      width: 130,
     },
     {
       field: 'dictType',
       title: '字典类型',
       align: "center",
-      width: 150,
+      width: 200,
       className: 'cell-click',
     },
     {
       field: 'status',
       title: '字典状态',
       align: "center",
-      width: 120,
+      width: 150,
       slots: {
         default: 'cache_status',
       },
@@ -249,31 +256,19 @@ const gridOptions = reactive<VxeGridProps>({
       field: 'remark',
       title: '备注',
       align: "center",
-      width: 200,
-    },
-    {
-      field: 'createBy',
-      title: '创建者',
-      align: "center",
-      width: 120,
+      width: 250,
     },
     {
       field: 'createTime',
       title: '创建时间',
       align: "center",
-      width: 180,
-    },
-    {
-      field: 'updateBy',
-      title: '更新者',
-      align: "center",
-      width: 120,
+      width: 200,
     },
     {
       field: 'updateTime',
       title: '更新时间',
       align: "center",
-      width: 180,
+      width: 200,
     },
   ],
   checkboxConfig: {
@@ -318,4 +313,5 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

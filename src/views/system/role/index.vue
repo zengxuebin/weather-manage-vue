@@ -190,12 +190,6 @@ const gridOptions = reactive<VxeGridProps>({
   },
   columns: [
     {
-      type: 'checkbox',
-      width: 60,
-      align: "center",
-      fixed: 'left',
-    },
-    {
       title: '序号',
       type: 'seq',
       align: "center",
@@ -229,6 +223,12 @@ const gridOptions = reactive<VxeGridProps>({
       },
     },
     {
+      field: 'remark',
+      title: '备注',
+      align: "center",
+      width: 200,
+    },
+    {
       field: 'createBy',
       title: '创建者',
       align: "center",
@@ -251,12 +251,6 @@ const gridOptions = reactive<VxeGridProps>({
       title: '更新时间',
       align: "center",
       width: 180,
-    },
-    {
-      field: 'remark',
-      title: '备注',
-      align: "center",
-      width: 200,
     },
   ],
   checkboxConfig: {

@@ -16,7 +16,7 @@
         status-icon>
         <el-form-item label="所属部门" prop="deptId">
           <el-select v-model="userForm.deptId" placeholder="请选择所属部门">
-            <el-option label="数据监控中心" value="100" />
+            <el-option label="数据中心" value="100" />
             <el-option label="用户中心" value="101" />
           </el-select>
         </el-form-item>

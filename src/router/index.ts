@@ -46,7 +46,7 @@ export const routes = [
     name: 'Acquisition',
     hidden: false,
     meta: {
-      title: '数据采集',
+      title: '气象管理',
       icon: 'vxe-icon-sort'
     },
     component: () => import('@/layout/index.vue'),
@@ -56,7 +56,7 @@ export const routes = [
         name: 'Collect',
         hidden: false,
         meta: {
-          title: '数据采集',
+          title: '数据管理',
           icon: 'vxe-icon-cloud-upload'
         },
         component: () => import('@/views/acquisition/collect/index.vue')
@@ -83,26 +83,6 @@ export const routes = [
     },
     component: () => import('@/layout/index.vue'),
     children: [
-      {
-        path: '/display/weather-now',
-        name: 'weatherNow',
-        hidden: false,
-        meta: {
-          title: '实时天气',
-          icon: 'vxe-icon-heavy-rain'
-        },
-        component: () => import('@/views/display/weatherNow/index.vue')
-      },
-      {
-        path: '/display/weather-forecast',
-        name: 'weatherForecast',
-        hidden: false,
-        meta: {
-          title: '预报天气',
-          icon: 'vxe-icon-sunny'
-        },
-        component: () => import('@/views/display/weatherForecast/index.vue')
-      },
       {
         path: '/display/weather-history',
         name: 'weatherHistory',
@@ -244,6 +224,16 @@ export const routes = [
         component: () => import('@/views/system/user/index.vue')
       },
       {
+        path: '/system/cache',
+        name: 'Cache',
+        hidden: false,
+        meta: {
+          title: '字典预览',
+          icon: 'vxe-icon-table'
+        },
+        component: () => import('@/views/monitor/cache/index.vue')
+      },
+      {
         path: '/system/menu',
         name: 'Menu',
         hidden: false,
@@ -262,38 +252,6 @@ export const routes = [
           icon: 'vxe-icon-user-fill'
         },
         component: () => import('@/views/system/role/index.vue')
-      },
-    ]
-  },
-  {
-    path: '/monitor',
-    name: 'Monitor',
-    hidden: false,
-    meta: {
-      title: '系统监控',
-      icon: 'vxe-icon-platform'
-    },
-    component: () => import('@/layout/index.vue'),
-    children: [
-      {
-        path: '/monitor/online',
-        name: 'Online',
-        hidden: false,
-        meta: {
-          title: '在线用户',
-          icon: 'vxe-icon-cloud-download'
-        },
-        component: () => import('@/views/monitor/online/index.vue')
-      },
-      {
-        path: '/monitor/cache',
-        name: 'Cache',
-        hidden: false,
-        meta: {
-          title: '缓存字典',
-          icon: 'vxe-icon-table'
-        },
-        component: () => import('@/views/monitor/cache/index.vue')
       },
     ]
   },
