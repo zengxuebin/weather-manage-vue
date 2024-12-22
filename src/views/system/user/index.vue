@@ -1,14 +1,225 @@
 <template>
   <div style="overflow: hidden; width: 100%; height: 100%;">
-    <vxe-grid ref='xGrid' v-bind="gridOptions"></vxe-grid>
+    <vxe-grid ref='xGrid' v-bind="gridOptions">
+      <template #toolbar_buttons>
+        <vxe-button status="primary" icon="vxe-icon-add" @click="addData">新增</vxe-button>
+        <vxe-button status="danger" icon="vxe-icon-delete" @click="deleteData">删除</vxe-button>
+      </template>
+      <template #operate="{ row }">
+        <vxe-button status="info" icon="vxe-icon-edit" @click="editData(row)">编辑</vxe-button>
+        <vxe-button status="danger" icon="vxe-icon-delete" @click="removeRow(row)">删除</vxe-button>
+      </template>
+    </vxe-grid>
+
+    <el-dialog v-model="dialogFormVisible" :title=title width="500" align-center @closed="resetForm">
+      <el-form ref="ruleFormRef" style="max-width: 500px" :model="userForm" :rules="rules" label-width="auto"
+        status-icon>
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="userForm.username" placeholder="请输入用户名" />
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="userForm.password" :disabled="pwdDisabled" class="pwd" placeholder="请输入密码"
+            autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="userForm.email" placeholder="请输入邮箱" />
+        </el-form-item>
+        <el-form-item label="手机号" prop="phoneNumber">
+          <el-input v-model="userForm.phoneNumber" placeholder="请输入手机号" />
+        </el-form-item>
+        <div class="footer">
+          <el-button type="primary" @click="submitForm(ruleFormRef)">
+            确认
+          </el-button>
+          <el-button @click="closeDialog()">取消</el-button>
+        </div>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
-import type { VXETable, VxeGridInstance, VxeGridProps } from 'vxe-table'
-import XEUtils from 'xe-utils'
-import { getPageUser } from "@/api/user"
+import type { VxeGridInstance, VxeGridProps } from 'vxe-table'
+import { getPageUser, addUser, updateUser, deleteUser, batchDeleteUser } from '@/api/system/user'
+
+const dialogFormVisible = ref(false)
+const pwdDisabled = ref(false)
+const title = ref('')
+
+let operateType = ''
+
+const ruleFormRef = ref<FormInstance>()
+
+interface UserForm {
+  id: string,
+  deptId: string,
+  username: string,
+  password: string,
+  email: string,
+  phoneNumber: string,
+}
+
+const userForm = reactive<UserForm>({
+  id: '',
+  deptId: '',
+  username: '',
+  password: '',
+  email: '',
+  phoneNumber: '',
+})
+
+const resetForm = () => {
+  userForm.id = ''
+  userForm.id = ''
+  userForm.deptId = ''
+  userForm.username = ''
+  userForm.password = ''
+  userForm.email = ''
+  userForm.phoneNumber = ''
+}
+
+const rules = reactive<FormRules<UserForm>>({
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+  ],
+  deptId: [
+    { required: true, message: '请选择所属部门', trigger: 'change', },
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+  ],
+  email: [
+    { type: 'email', message: '请输入正确的邮箱', trigger: 'blur' },
+  ],
+})
+
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      console.log('submit!')
+      if (operateType === 'add') {
+        addUser(userForm).then(res => {
+          dialogFormVisible.value = false
+          xGrid.value.commitProxy('query')
+          ElMessage({
+            message: '新增用户成功',
+            type: 'success',
+          })
+        })
+      } else if (operateType === 'update') {
+        updateUser(userForm).then(res => {
+          dialogFormVisible.value = false
+          xGrid.value.commitProxy('query')
+          ElMessage({
+            message: '更新用户成功',
+            type: 'success',
+          })
+        })
+      }
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+}
+
+const closeDialog = () => {
+  dialogFormVisible.value = false
+}
+
+const addData = () => {
+  title.value = '新增用户'
+  operateType = 'add'
+  dialogFormVisible.value = true
+  console.log('add')
+}
+
+const removeRow = (row: any) => {
+  console.log(row)
+  ElMessageBox.confirm(
+    '此操作将删除所选用户记录，此操作不可逆，是否继续？',
+    '删除',
+    {
+      confirmButtonText: '继续',
+      cancelButtonText: '取消',
+      type: 'success',
+    }
+  )
+    .then(() => {
+      console.log(row.id);
+
+      deleteUser(row.id).then(res => {
+        xGrid.value.commitProxy('query')
+        ElMessage({
+          type: 'success',
+          message: '删除用户成功！',
+        })
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '您取消了该操作',
+      })
+    })
+}
+
+const deleteData = () => {
+  if (xGrid.value) {
+    const rows = xGrid.value.getCheckboxRecords(true)
+    if (rows && rows.length >= 1) {
+      ElMessageBox.confirm(
+        '此操作将删除所选用户记录，此操作不可逆，是否继续？',
+        '删除',
+        {
+          confirmButtonText: '继续',
+          cancelButtonText: '取消',
+          type: 'success',
+        }
+      )
+        .then(() => {
+          let userIds: any[] = []
+          rows.forEach(item => {
+            console.log(item);
+            userIds.push(item.id)
+          })
+          batchDeleteUser(userIds).then(res => {
+            ElMessage({
+              type: 'success',
+              message: '删除所选用户成功！',
+            })
+            xGrid.value.commitProxy('query')
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '您取消了该操作',
+          })
+        })
+    } else {
+      ElMessage({
+        message: '请选择需要删除的用户记录',
+        type: 'warning',
+      })
+    }
+  }
+}
+
+const editData = (row: any) => {
+  title.value = '编辑用户'
+  operateType = 'update'
+  dialogFormVisible.value = true
+  pwdDisabled.value = true
+  userForm.id = row.id
+  userForm.username = row.username
+  userForm.deptId = row.deptId
+  userForm.email = row.email
+  userForm.phoneNumber = row.phoneNumber
+  userForm.password = row.password
+}
 
 const xGrid = ref<VxeGridInstance>()
 
@@ -169,25 +380,9 @@ const gridOptions = reactive<VxeGridProps>({
     ]
   },
   toolbarConfig: {
-    buttons: [
-      {
-        status: 'primary',
-        name: '新增',
-        icon: 'vxe-icon-add'
-      },
-      {
-        status: 'primary',
-        name: '编辑',
-        icon: 'vxe-icon-edit'
-      },
-      // 删除选中行；会自动触发 ajax.delete 方法
-      {
-        code: 'delete',
-        status: 'danger',
-        name: '删除',
-        icon: 'vxe-icon-delete'
-      },
-    ],
+    slots: {
+      buttons: 'toolbar_buttons'
+    },
     refresh: true, // 显示刷新按钮
     export: true, // 显示导出按钮
     zoom: true, // 显示全屏按钮
@@ -226,7 +421,7 @@ const gridOptions = reactive<VxeGridProps>({
             }
           }
           console.log(data);
-          
+
           // 调用方法
           getPageUser(data).then(res => {
             const data = res.data
@@ -363,4 +558,8 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.footer {
+  text-align: center;
+}
+</style>

@@ -7,12 +7,10 @@ import router from './router'
 import '@/assets/styles/index.scss'
 import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 // 引入vxetable
 import VXETable from 'vxe-table'
-import 'vxe-table/lib/style.css'
-import '@/assets/styles/vxetable.scss'
 
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

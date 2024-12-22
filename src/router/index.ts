@@ -16,11 +16,6 @@ export const routes = [
     component: () => import('@/views/Login.vue'),
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: () => import('@/views/Register.vue'),
-  },
-  {
     path: '/resetPwd',
     name: 'ResetPwd',
     component: () => import('@/views/ResetPwd.vue'),
@@ -36,7 +31,7 @@ export const routes = [
     children: [
       {
         path: '/index',
-        name: 'Index',
+        name: 'index',
         hidden: false,
         meta: {
           title: '首页',
@@ -142,7 +137,7 @@ export const routes = [
     children: [
       {
         path: '/data-statistics/weather',
-        name: 'dataStatistics',
+        name: 'data-statistics',
         hidden: false,
         meta: {
           title: '气象数据统计',
@@ -332,7 +327,7 @@ router.beforeEach((to, from, next) => {
           isAdmin.value = useUserStore().roles[0]
           useRouterStore().generateRoutes().then((routers: any) => {
             routers.forEach((route: any) => {
-              // router.addRoute(route)
+              router.addRoute(route)
             })
           })
           next()
