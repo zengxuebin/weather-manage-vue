@@ -144,32 +144,10 @@ export const routes = [
         name: 'data-statistics',
         hidden: false,
         meta: {
-          title: '气象数据统计',
+          title: '气象站点统计',
           icon: 'vxe-icon-chart-radar'
         },
         component: () => import('@/views/dataStatistics/weather/index.vue')
-      },
-    ]
-  },
-  {
-    path: '/log',
-    name: 'log',
-    hidden: false,
-    meta: {
-      title: '日志',
-      icon: 'vxe-icon-chart-radar'
-    },
-    component: () => import('@/layout/index.vue'),
-    children: [
-      {
-        path: '/log/operate',
-        name: 'log-operate',
-        hidden: false,
-        meta: {
-          title: '操作日志',
-          icon: 'vxe-icon-feedback'
-        },
-        component: () => import('@/views/system/role/index.vue')
       },
     ]
   },

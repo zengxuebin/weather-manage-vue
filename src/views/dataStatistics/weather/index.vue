@@ -11,9 +11,6 @@
           <StationEchart :options="StationOption" height="300px"></StationEchart>
         </el-card>
       </el-col>
-      <el-col :span="6" style="border: 1px solid;">
-        <MapEchart :options="mapOption" height="380px"></MapEchart>
-      </el-col>
       <el-col :span="9">
         <el-card class="today-card">
           <template #header>
@@ -25,66 +22,6 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-card class="today-card" style="margin-top: 22px;">
-      <template #header>
-        <div>
-          <span>天气统计</span>
-          <span style="float: right;">江西省南昌市</span>
-        </div>
-      </template>
-      <div class="progress">
-        <el-progress type="circle" :percentage="30" color="#00796a">
-          <el-row>
-            <el-col>
-              <el-text>晴</el-text>
-            </el-col>
-            <el-col style="margin-top: 5px;">
-              <el-text>42天</el-text>
-            </el-col>
-          </el-row>
-        </el-progress>
-        <el-progress type="circle" :percentage="36" color="#00796a">
-          <el-row>
-            <el-col>
-              <el-text>阴</el-text>
-            </el-col>
-            <el-col style="margin-top: 5px;">
-              <el-text>78天</el-text>
-            </el-col>
-          </el-row>
-        </el-progress>
-        <el-progress type="circle" :percentage="30" color="#00796a">
-          <el-row>
-            <el-col>
-              <el-text>雨</el-text>
-            </el-col>
-            <el-col style="margin-top: 5px;">
-              <el-text>28天</el-text>
-            </el-col>
-          </el-row>
-        </el-progress>
-        <el-progress type="circle" :percentage="0" color="#00796a">
-          <el-row>
-            <el-col>
-              <el-text>雪</el-text>
-            </el-col>
-            <el-col style="margin-top: 5px;">
-              <el-text>0天</el-text>
-            </el-col>
-          </el-row>
-        </el-progress>
-        <el-progress type="circle" :percentage="4" color="#00796a">
-          <el-row>
-            <el-col>
-              <el-text>其它</el-text>
-            </el-col>
-            <el-col style="margin-top: 5px;">
-              <el-text>18天</el-text>
-            </el-col>
-          </el-row>
-        </el-progress>
-      </div>
-    </el-card>
   </div>
 </template>
 
