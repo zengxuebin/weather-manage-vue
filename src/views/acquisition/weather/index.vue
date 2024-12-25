@@ -2,16 +2,19 @@
   <div style="overflow: hidden; width: 100%; height: 100%;">
     <vxe-grid ref='xGrid' v-bind="gridOptions">
       <template #toolbar_buttons>
-        <vxe-button status="primary" icon="vxe-icon-cloudy" @click="collectData">即时采集</vxe-button>
-        <vxe-button status="info" icon="vxe-icon-repeat" @click="historyCollectData">历史采集</vxe-button>
+        <vxe-button status="primary" icon="vxe-icon-add" @click="addData">新增</vxe-button>
+        <vxe-button status="danger" icon="vxe-icon-delete" @click="deleteData">删除</vxe-button>
+      </template>
+      <template #operate="{ row }">
+        <vxe-button status="info" icon="vxe-icon-edit" @click="editData(row)">编辑</vxe-button>
+        <vxe-button status="danger" icon="vxe-icon-delete" @click="removeRow(row)">删除</vxe-button>
       </template>
     </vxe-grid>
+
     <el-dialog v-model="dialogFormVisible" :title=title width="500" align-center @closed="resetForm">
-      <el-form ref="ruleFormRef" style="max-width: 500px" :model="collectForm" :rules="rules" label-width="auto"
+      <el-form ref="ruleFormRef" style="max-width: 500px" :model="weatherDataForm" :rules="rules" label-width="auto"
         status-icon>
-        <el-form-item label="采集日期" prop="collectDate">
-          <el-date-picker v-model="collectForm.collectDate" placeholder="请选择采集日期" value-format="YYYY-MM-DD" :disabled-date="disableCollectDate"  />
-        </el-form-item>
+        
         <div class="footer">
           <el-button type="primary" @click="submitForm(ruleFormRef)">
             确认
@@ -26,98 +29,177 @@
 <script setup lang="ts">
 import { ElLoading, ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
-import type { VxeGridInstance, VxeGridProps } from 'vxe-table'
-import { getNowWeather, getWeatherByDate } from "@/api/weatherData"
+import type { VXETable, VxeGridInstance, VxeGridProps } from 'vxe-table'
+import { getNowWeather } from "@/api/weatherData"
 import { getAllStation } from "@/api/weatherStation"
-import { getPageWeather } from '@/api/weather/weatherData'
+import { addWeather, batchDeleteWeather, deleteWeather, getPageWeather, updateWeather } from '@/api/weather/weatherData'
 
-const disableCollectDate = (date: { getTime: () => number }) => {
-  return date.getTime() > new Date().getTime() - 24 * 60 * 60 * 1000
-}
 
 const dialogFormVisible = ref(false)
-const title = ref('历史采集')
+const pwdDisabled = ref(false)
+const title = ref('')
+
+let operateType = ''
 
 const ruleFormRef = ref<FormInstance>()
 
-interface collectForm {
-  collectDate: string,
+interface WeatherDataForm {
+  stationNo: string,
+  dataCollectTime: string,
+  temperature: string,
+  humidity: string,
+  pressure: string,
+  windSpeed: string,
+  windDirection: string,
+  precipitation: string,
+  clouds: string,
+  visibility: string,
+  airQualityDesc: string,
+  aqi: string,
+  pm25: string,
+  pm10: string,
+  no2: string,
+  so2: string,
+  o3: string,
+  co:string,
 }
 
-const collectForm = reactive<collectForm>({
-  collectDate: '',
+const weatherDataForm = reactive<WeatherDataForm>({
 })
 
 const resetForm = () => {
-  collectForm.collectDate = ''
 }
 
-const rules = reactive<FormRules<collectForm>>({
-  collectDate: [
-    { required: true, message: '请选择采集日期', trigger: 'blur' },
-  ],
+const rules = reactive<FormRules<WeatherDataForm>>({
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      ElMessageBox.confirm(
-        '此操作将采集' + collectForm.collectDate + '所有气象站的气象数据，是否继续？',
-        '采集',
-        {
-          confirmButtonText: '继续',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
-      )
-        .then(() => {
-          const loading = ElLoading.service({
-            lock: true,
-            text: '正在采集中',
-          })
-          getWeatherByDate(collectForm.collectDate).then(res => {
-            console.log(res);
-            loading.close()
-            dialogFormVisible.value = false
-            if (xGrid.value) {
-              xGrid.value.commitProxy('query')
-            }
-            ElMessage({
-              type: 'success',
-              message: '采集成功',
-            })
-          })
-            .catch(() => {
-              loading.close()
-              if (xGrid.value) {
-                xGrid.value.commitProxy('query')
-              }
-              ElMessage({
-                type: 'success',
-                message: '采集成功',
-              })
-            })
-        })
-        .catch(() => {
+      console.log('submit!')
+      if (operateType === 'add') {
+        addWeather(weatherDataForm).then(res => {
+          dialogFormVisible.value = false
+          if (xGrid.value) {
+            xGrid.value.commitProxy('query')
+          }
           ElMessage({
-            type: 'info',
-            message: '您已取消采集操作',
+            message: '新增气象成功',
+            type: 'success',
           })
         })
+      } else if (operateType === 'update') {
+        updateWeather(weatherDataForm).then(res => {
+          dialogFormVisible.value = false
+          if (xGrid.value) {
+            xGrid.value.commitProxy('query')
+          }
+          ElMessage({
+            message: '更新气象成功',
+            type: 'success',
+          })
+        })
+      }
     } else {
       console.log('error submit!', fields)
     }
   })
 }
 
-const historyCollectData = () => {
-  title.value = '历史采集'
-  dialogFormVisible.value = true
-}
-
 const closeDialog = () => {
   dialogFormVisible.value = false
+}
+
+const addData = () => {
+  title.value = '新增气象'
+  operateType = 'add'
+  dialogFormVisible.value = true
+  pwdDisabled.value = false
+  console.log('add')
+}
+
+const removeRow = (row: any) => {
+  console.log(row)
+  ElMessageBox.confirm(
+    '此操作将删除所选气象记录，此操作不可逆，是否继续？',
+    '删除',
+    {
+      confirmButtonText: '继续',
+      cancelButtonText: '取消',
+      type: 'success',
+    }
+  )
+    .then(() => {
+      console.log(row.dataId);
+
+      deleteWeather(row.dataId).then(res => {
+        if (xGrid.value) {
+          xGrid.value.commitProxy('query')
+        }
+        ElMessage({
+          type: 'success',
+          message: '删除气象成功！',
+        })
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '您取消了该操作',
+      })
+    })
+}
+
+const deleteData = () => {
+  if (xGrid.value) {
+    const rows = xGrid.value.getCheckboxRecords(true)
+    if (rows && rows.length >= 1) {
+      ElMessageBox.confirm(
+        '此操作将删除所选气象记录，此操作不可逆，是否继续？',
+        '删除',
+        {
+          confirmButtonText: '继续',
+          cancelButtonText: '取消',
+          type: 'success',
+        }
+      )
+        .then(() => {
+          let dataIds: any[] = []
+          rows.forEach(item => {
+            console.log(item);
+            dataIds.push(item.dataId)
+          })
+          batchDeleteWeather(dataIds).then(res => {
+            ElMessage({
+              type: 'success',
+              message: '删除所选气象成功！',
+            })
+            if (xGrid.value) {
+              xGrid.value.commitProxy('query')
+            }
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '您取消了该操作',
+          })
+        })
+    } else {
+      ElMessage({
+        message: '请选择需要删除的气象记录',
+        type: 'warning',
+      })
+    }
+  }
+}
+
+const editData = (row: any) => {
+  title.value = '编辑气象'
+  operateType = 'update'
+  dialogFormVisible.value = true
+  pwdDisabled.value = true
 }
 
 const xGrid = ref<VxeGridInstance>()
@@ -185,10 +267,6 @@ const collectData = () => {
         message: '您已取消采集操作',
       })
     })
-}
-
-const editData = () => {
-  console.log('编辑按钮被点击');
 }
 
 const gridOptions = reactive<VxeGridProps>({
@@ -369,6 +447,12 @@ const gridOptions = reactive<VxeGridProps>({
   },
   columns: [
     {
+      type: 'checkbox',
+      width: 60,
+      align: "center",
+      fixed: 'left'
+    },
+    {
       type: 'seq',
       title: '序号',
       align: "center",
@@ -486,6 +570,15 @@ const gridOptions = reactive<VxeGridProps>({
       align: "center",
       width: 100,
     },
+    {
+      title: '操作',
+      align: "center",
+      width: 200,
+      fixed: 'right',
+      slots: {
+        default: 'operate'
+      }
+    },
   ],
   checkboxConfig: {
     reserve: true,
@@ -527,3 +620,4 @@ function disabledDate({ date }: any) {
   text-align: center;
 }
 </style>
+

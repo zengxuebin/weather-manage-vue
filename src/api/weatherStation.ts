@@ -7,19 +7,7 @@ import request from '@/utils/request'
 export const getAllStation = () => {
   return request({
     method: 'get',
-    url: '/station/list'
-  })
-}
-
-/**
- * 分页获取监测站
- * @returns 分页检查站
- */
-export const getPageStation = (data: any) => {
-  return request({
-    method: 'post',
-    url: '/station/page',
-    data
+    url: '/weather/station/list'
   })
 }
 
@@ -30,7 +18,7 @@ export const getPageStation = (data: any) => {
 export const getAllCity = () => {
   return request({
     method: 'get',
-    url: '/station/city/list'
+    url: '/weather/station/city/list'
   })
 }
 
@@ -41,7 +29,7 @@ export const getAllCity = () => {
 export const getStationByCity = (city: string) => {
   return request({
     method: 'get',
-    url: '/station/list/' + city,
+    url: '/weather/station/list/' + city,
   })
 }
 
@@ -52,6 +40,6 @@ export const getStationByCity = (city: string) => {
 export const countStation = () => {
   return request({
     method: 'get',
-    url: '/station/count',
+    url: '/weather/station/count',
   })
 }

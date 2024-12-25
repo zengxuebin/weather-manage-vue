@@ -4,9 +4,20 @@
     <el-row style="margin: 10px 0;">
       <el-col :span="7" style="padding-top: 8px;">
         <span style="font-weight: bold;">当前所在地：</span>
-        <div class="location-item">江西省</div>
         <div class="location-item">
-          <el-dropdown trigger="click" @command="handleCommand">
+          <el-dropdown trigger="click" @command="handleProvince" max-height="260">
+            <span class="el-dropdown-link">
+              {{ nowProvince }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <template v-for="item in provinces" :key="item.value">
+                  <el-dropdown-item :command="item.label">{{ item.label }}</el-dropdown-item>
+                </template>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <el-dropdown trigger="click" @command="handleCommand" style="margin-left: 10px;" max-height="260" :disabled="disableCity">
             <span class="el-dropdown-link">
               {{ nowCity }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
             </span>
@@ -19,9 +30,6 @@
             </template>
           </el-dropdown>
         </div>
-        <!-- <el-select v-model="nowCity" placeholder="请选择城市" @change="change">
-          <el-option v-for="item in cityList" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select> -->
       </el-col>
       <el-col :span="6">
         <el-date-picker v-model="dateRange" type="daterange" start-placeholder="检索开始时间" end-placeholder="检索结束时间"
@@ -31,7 +39,7 @@
     <el-card class="today-card">
       <template #header>
         <div>
-          <span>历史天气（数据库天气数据始于2024-01-01）</span>
+          <span>历史天气</span>
         </div>
       </template>
       <el-row :gutter="16" style="text-align: center;">
@@ -145,26 +153,45 @@ import TempEchart from "@/components/echarts/index.vue"
 import { getAllCity, getStationByCity } from "@/api/weatherStation"
 import { getHistoryStatistics } from "@/api/weatherHistory"
 import XEUtils from 'xe-utils'
-import { number } from 'echarts'
+import { provinceAndCityData } from 'element-china-area-data'
 
-const nowCity = ref('南昌市')
+const disableCity = ref(true)
+// 省市联动
+console.log(provinceAndCityData)
+const provinces = Object.keys(provinceAndCityData).map(key => ({
+  value: provinceAndCityData[Number(key)].value,
+  label: provinceAndCityData[Number(key)].label
+}))
 
-const cityList: any = reactive([])
+const nowProvince = ref('请选择')
+const nowCity = ref('请选择')
 
-getAllCity().then(res => {
-  const data = res.data
-  cityList.length = 0
-  data.forEach((item: any) => {
-    cityList.push({
-      label: item.station_city,
-      value: item.station_city
-    })
-  })
-  console.log(cityList);
-
-})
+const cityList: any = ref([])
 
 const weatherStationList = ref([])
+
+const handleProvince = (command: string) => {
+  disableCity.value = false
+  nowProvince.value = command
+  const selectedProvinceValue = command
+  console.log('省份选择变化:', selectedProvinceValue);
+
+  if (selectedProvinceValue) {
+    const selectedProvince = provinceAndCityData.find(province => province.label === selectedProvinceValue)
+    if (selectedProvince && selectedProvince.children) {
+      selectedProvince.children = selectedProvince.children.map(child => ({
+        label: child.label,
+        value: child.label // 将 value 修改为与 label 相同
+      }))
+      cityList.value = selectedProvince.children
+    } else {
+      cityList.value = []
+    }
+  } else {
+    cityList.value = []
+  }
+  console.log(cityList);
+}
 
 const handleCommand = (command: string) => {
   nowCity.value = command

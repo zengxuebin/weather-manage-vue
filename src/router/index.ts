@@ -1,244 +1,248 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import useUserStore from "@/stores/user"
-import useRouterStore from "@/stores/router"
-import { ref } from 'vue'
+import { createRouter, createWebHistory } from "vue-router";
+import useUserStore from "@/stores/user";
+import useRouterStore from "@/stores/router";
+import { ref } from "vue";
 
-const isAdmin = ref('')
+const isAdmin = ref("");
 
 export const routes = [
   {
-    path: '/',
-    redirect: '/login'
+    path: "/",
+    redirect: "/login",
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/Login.vue'),
+    path: "/login",
+    name: "Login",
+    component: () => import("@/views/Login.vue"),
   },
   {
-    path: '/resetPwd',
-    name: 'ResetPwd',
-    component: () => import('@/views/ResetPwd.vue'),
+    path: "/resetPwd",
+    name: "ResetPwd",
+    component: () => import("@/views/ResetPwd.vue"),
   },
   {
-    path: '/index',
-    name: 'Index',
+    path: "/index",
+    name: "Index",
     meta: {
-      title: '首页',
-      icon: 'vxe-icon-home'
+      title: "首页",
+      icon: "vxe-icon-home",
     },
-    component: () => import('@/layout/index.vue'),
+    component: () => import("@/layout/index.vue"),
     children: [
       {
-        path: '/index',
-        name: 'index',
+        path: "/index",
+        name: "index",
         hidden: false,
         meta: {
-          title: '首页',
-          icon: 'vxe-icon-home'
+          title: "首页",
+          icon: "vxe-icon-home",
         },
-        component: () => import('@/views/index.vue')
+        component: () => import("@/views/index.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/acquist',
-    name: 'Acquisit',
+    path: "/acquist",
+    name: "Acquisit",
     hidden: false,
     meta: {
-      title: '气象管理',
-      icon: 'vxe-icon-sort'
+      title: "气象管理",
+      icon: "vxe-icon-sort",
     },
-    component: () => import('@/layout/index.vue'),
+    component: () => import("@/layout/index.vue"),
     children: [
       {
-        path: '/acquisition/collect',
-        name: 'Collect',
+        path: "/acquisition/collect",
+        name: "Collect",
         hidden: false,
         meta: {
-          title: '气象采集',
-          icon: 'vxe-icon-cloud-upload'
+          title: "气象采集",
+          icon: "vxe-icon-cloud-upload",
         },
-        component: () => import('@/views/acquisition/collect/index.vue')
+        component: () => import("@/views/acquisition/collect/index.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/manager',
-    name: 'Manager',
+    path: "/manager",
+    name: "Manager",
     hidden: false,
     meta: {
-      title: '气象管理',
-      icon: 'vxe-icon-sort'
+      title: "气象管理",
+      icon: "vxe-icon-sort",
     },
-    component: () => import('@/layout/index.vue'),
+    component: () => import("@/layout/index.vue"),
     children: [
       {
-        path: '/manager/Acquisition',
-        name: 'Acquisition',
+        path: "/manager/Acquisition",
+        name: "Acquisition",
         hidden: false,
         meta: {
-          title: '气象管理',
-          icon: 'vxe-icon-chart-line'
+          title: "气象管理",
+          icon: "vxe-icon-chart-line",
         },
-        component: () => import('@/views/acquisition/collect/index.vue')
+        component: () => import("@/views/acquisition/weather/index.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/station',
-    name: 'station',
+    path: "/station",
+    name: "station",
     hidden: false,
     meta: {
-      title: '气象管理',
-      icon: 'vxe-icon-sort'
+      title: "气象管理",
+      icon: "vxe-icon-sort",
     },
-    component: () => import('@/layout/index.vue'),
+    component: () => import("@/layout/index.vue"),
     children: [
       {
-        path: '/station/weatherStation',
-        name: 'weatherStation',
+        path: "/station/weatherStation",
+        name: "weatherStation",
         hidden: false,
         meta: {
-          title: '站点管理',
-          icon: 'vxe-icon-flag-fill'
+          title: "站点管理",
+          icon: "vxe-icon-flag-fill",
         },
-        component: () => import('@/views/acquisition/weatherStation/index.vue')
+        component: () => import("@/views/acquisition/weatherStation/index.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/display',
-    name: 'Display',
+    path: "/display",
+    name: "Display",
     hidden: false,
     meta: {
-      title: '数据展示',
-      icon: 'vxe-icon-num-list'
+      title: "数据展示",
+      icon: "vxe-icon-num-list",
     },
-    component: () => import('@/layout/index.vue'),
+    component: () => import("@/layout/index.vue"),
     children: [
       {
-        path: '/display/weather-history',
-        name: 'weatherHistory',
+        path: "/display/weather-history",
+        name: "weatherHistory",
         hidden: false,
         meta: {
-          title: '历史天气',
-          icon: 'vxe-icon-cloudy'
+          title: "历史天气",
+          icon: "vxe-icon-cloudy",
         },
-        component: () => import('@/views/display/weatherHistory/index.vue')
+        component: () => import("@/views/display/weatherHistory/index.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/data-statistics',
-    name: 'dataStatistics',
+    path: "/data-statistics",
+    name: "dataStatistics",
     hidden: false,
     meta: {
-      title: '数据统计',
-      icon: 'vxe-icon-chart-radar'
+      title: "数据统计",
+      icon: "vxe-icon-chart-radar",
     },
-    component: () => import('@/layout/index.vue'),
+    component: () => import("@/layout/index.vue"),
     children: [
       {
-        path: '/data-statistics/weather',
-        name: 'data-statistics',
+        path: "/data-statistics/weather",
+        name: "data-statistics",
         hidden: false,
         meta: {
-          title: '气象站点统计',
-          icon: 'vxe-icon-chart-radar'
+          title: "气象站点统计",
+          icon: "vxe-icon-chart-radar",
         },
-        component: () => import('@/views/dataStatistics/weather/index.vue')
+        component: () => import("@/views/dataStatistics/weather/index.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/system',
-    name: 'System',
+    path: "/system",
+    name: "System",
     hidden: false,
     meta: {
-      title: '系统管理',
-      icon: 'vxe-icon-setting'
+      title: "系统管理",
+      icon: "vxe-icon-setting",
     },
-    component: () => import('@/layout/index.vue'),
+    component: () => import("@/layout/index.vue"),
     children: [
       {
-        path: '/system/user',
-        name: 'User',
+        path: "/system/user",
+        name: "User",
         hidden: false,
         meta: {
-          title: '用户管理',
-          icon: 'vxe-icon-user'
+          title: "用户管理",
+          icon: "vxe-icon-user",
         },
-        component: () => import('@/views/system/user/index.vue')
+        component: () => import("@/views/system/user/index.vue"),
       },
       {
-        path: '/system/cache',
-        name: 'Cache',
+        path: "/system/cache",
+        name: "Cache",
         hidden: false,
         meta: {
-          title: '字典预览',
-          icon: 'vxe-icon-table'
+          title: "字典预览",
+          icon: "vxe-icon-table",
         },
-        component: () => import('@/views/monitor/cache/index.vue')
+        component: () => import("@/views/monitor/cache/index.vue"),
       },
       {
-        path: '/system/menu',
-        name: 'Menu',
+        path: "/system/menu",
+        name: "Menu",
         hidden: false,
         meta: {
-          title: '菜单预览',
-          icon: 'vxe-icon-menu'
+          title: "菜单预览",
+          icon: "vxe-icon-menu",
         },
-        component: () => import('@/views/system/menu/index.vue')
+        component: () => import("@/views/system/menu/index.vue"),
       },
       {
-        path: '/system/role',
-        name: 'Role',
+        path: "/system/role",
+        name: "Role",
         hidden: false,
         meta: {
-          title: '角色预览',
-          icon: 'vxe-icon-user-fill'
+          title: "角色预览",
+          icon: "vxe-icon-user-fill",
         },
-        component: () => import('@/views/system/role/index.vue')
+        component: () => import("@/views/system/role/index.vue"),
       },
-    ]
+    ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-const whiteList = ['/login', '/register'];
+const whiteList = ["/login", "/register"];
 
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('token')) {
-    if (to.path === '/login') {
-      next({ path: '/index' })
+  if (localStorage.getItem("token")) {
+    if (to.path === "/login") {
+      next({ path: "/index" });
     } else {
       if (useUserStore().roles.length === 0) {
-        useUserStore().getUserInfo().then(() => {
-          // 管理员标志
-          isAdmin.value = useUserStore().roles[0]
-          useRouterStore().generateRoutes().then((routers: any) => {
-            routers.forEach((route: any) => {
-              router.addRoute(route)
-            })
-          })
-          next()
-        })
+        useUserStore()
+          .getUserInfo()
+          .then(() => {
+            // 管理员标志
+            isAdmin.value = useUserStore().roles[0];
+            useRouterStore()
+              .generateRoutes()
+              .then((routers: any) => {
+                routers.forEach((route: any) => {
+                  router.addRoute(route);
+                });
+              });
+            next();
+          });
       } else {
-        next()
+        next();
       }
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
-      next()
+      next();
     } else {
-      next('/')
+      next("/");
     }
   }
-})
+});
 
-export default router
+export default router;

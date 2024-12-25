@@ -7,18 +7,18 @@ import request from '@/utils/request'
 export const getNowWeather = () => {
   return request({
     method: 'post',
-    url: '/weatherData/collect',
+    url: '/weather/data/collect',
   })
 }
 
 /**
- * 分页获取气象数据
- * @returns 分气象数据
+ * 采集指定日期的气象数据
+ * @returns 采集结果
  */
-export const getPageWeatherData = (data: any) => {
+export const getWeatherByDate = (date: string) => {
   return request({
     method: 'post',
-    url: '/weatherData/page',
-    data
+    url: '/weather/data/collect/' + date,
   })
 }
+
