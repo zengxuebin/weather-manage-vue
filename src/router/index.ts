@@ -204,7 +204,9 @@ router.beforeEach((to, from, next) => {
             // 管理员标志
             isAdmin.value = useUserStore().roles[0];
             if (isAdmin.value != 'admin') {
-              routes.pop()
+              if (routes.length == 10) {
+                routes.pop()
+              }
             }
             next();
           });
