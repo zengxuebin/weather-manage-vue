@@ -203,9 +203,44 @@ router.beforeEach((to, from, next) => {
           .then(() => {
             // 管理员标志
             isAdmin.value = useUserStore().roles[0];
-            if (isAdmin.value != 'admin') {
+            if (isAdmin.value != "admin") {
               if (routes.length == 10) {
-                routes.pop()
+                routes.pop();
+              }
+            } else {
+              if (routes.length != 10) {
+                routes.push({
+                  path: "/system",
+                  name: "System",
+                  hidden: false,
+                  meta: {
+                    title: "系统管理",
+                    icon: "vxe-icon-setting",
+                  },
+                  component: () => import("@/layout/index.vue"),
+                  children: [
+                    {
+                      path: "/system/user",
+                      name: "User",
+                      hidden: false,
+                      meta: {
+                        title: "用户管理",
+                        icon: "vxe-icon-user",
+                      },
+                      component: () => import("@/views/system/user/index.vue"),
+                    },
+                    {
+                      path: "/system/role",
+                      name: "Role",
+                      hidden: false,
+                      meta: {
+                        title: "角色预览",
+                        icon: "vxe-icon-user-fill",
+                      },
+                      component: () => import("@/views/system/role/index.vue"),
+                    },
+                  ],
+                });
               }
             }
             next();
