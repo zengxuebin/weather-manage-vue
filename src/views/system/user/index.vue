@@ -16,8 +16,8 @@
         status-icon>
         <el-form-item label="所属部门" prop="deptId">
           <el-select v-model="userForm.deptId" placeholder="请选择所属部门">
-            <el-option label="数据中心" value="100" />
-            <el-option label="用户中心" value="101" />
+            <el-option label="基准站" value="100" />
+            <el-option label="基本站" value="101" />
           </el-select>
         </el-form-item>
         <el-form-item label="用户名" prop="username">
@@ -380,8 +380,8 @@ const gridOptions = reactive<VxeGridProps>({
         itemRender: {
           name: '$select',
           options: [
-            { label: '数据监测中心', value: '100' },
-            { label: '用户中心', value: '101' },
+            { label: '基准站', value: '100' },
+            { label: '基本站', value: '101' },
           ],
           props: {
             placeholder: '请选择所在部门'
@@ -535,9 +535,9 @@ const gridOptions = reactive<VxeGridProps>({
       width: 150,
       formatter: ({ cellValue }) => {
         if (cellValue == '100') {
-          return '数据监测中心'
+          return '基准站'
         } else {
-          return '用户中心'
+          return '基本站'
         }
       }
     },

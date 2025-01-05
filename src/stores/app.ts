@@ -1,4 +1,4 @@
-import { login } from "@/api/login"
+import { login } from "@/api/auth"
 import { defineStore } from "pinia"
 import { reactive, ref } from 'vue'
 

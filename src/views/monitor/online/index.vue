@@ -227,9 +227,9 @@ const gridOptions = reactive<VxeGridProps>({
       minWidth: 150,
       formatter: ({ cellValue }) => {
         if (cellValue == '100') {
-          return '数据监测中心'
+          return '基准站'
         } else {
-          return '用户中心'
+          return '基本站'
         }
       }
     },
@@ -263,8 +263,8 @@ const gridOptions = reactive<VxeGridProps>({
 
 onMounted(() => {
   const sexList = [
-    { label: '用户中心', value: '用户中心' },
-    { label: '数据监测中心', value: '数据监测中心' },
+    { label: '基准站', value: '基准站' },
+    { label: '基本站', value: '基本站' },
   ]
   const { formConfig } = gridOptions
 

@@ -14,7 +14,66 @@
     <el-dialog v-model="dialogFormVisible" :title=title width="500" align-center @closed="resetForm">
       <el-form ref="ruleFormRef" style="max-width: 500px" :model="weatherDataForm" :rules="rules" label-width="auto"
         status-icon>
-        
+        <el-form-item label="所属站点" prop="stationNo">
+          <el-select v-model="weatherDataForm.stationNo" placeholder="请选择所属站点" :disabled="stationNoDisabled">
+            <el-option v-for="item in stationList" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="采集日期" prop="dataCollectTime">
+          <el-date-picker type="datetime" v-model="weatherDataForm.dataCollectTime" placeholder="请选择采集日期"
+            value-format="YYYY-MM-DD HH:mm:ss" :disabled-date="disableCollectDate" />
+        </el-form-item>
+        <el-form-item label="温度" prop="temperature">
+          <el-input-number v-model="weatherDataForm.temperature" :precision="2" :step="0.1" :max="99">
+            <template #suffix>
+              <span>℃</span>
+            </template>
+          </el-input-number>
+        </el-form-item>
+        <el-form-item label="湿度" prop="humidity">
+          <el-input-number v-model="weatherDataForm.humidity" :precision="2" :step="10" :max="999" />
+        </el-form-item>
+        <el-form-item label="气压" prop="pressure">
+          <el-input-number v-model="weatherDataForm.pressure" :precision="0" :step="100" :max="99999" />
+        </el-form-item>
+        <el-form-item label="风速" prop="windSpeed">
+          <el-input-number v-model="weatherDataForm.windSpeed" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="风向" prop="windDirection">
+          <el-select v-model="weatherDataForm.windDirection" placeholder="请选择风向">
+            <el-option v-for="item in sexList" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="降水量" prop="precipitation">
+          <el-input-number v-model="weatherDataForm.precipitation" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="云量" prop="clouds">
+          <el-input-number v-model="weatherDataForm.clouds" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="能见度" prop="visibility">
+          <el-input-number v-model="weatherDataForm.visibility" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="AQI" prop="aqi">
+          <el-input-number v-model="weatherDataForm.aqi" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="PM 2.5" prop="pm25">
+          <el-input-number v-model="weatherDataForm.pm25" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="PM 10" prop="pm10">
+          <el-input-number v-model="weatherDataForm.pm10" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="NO2" prop="no2">
+          <el-input-number v-model="weatherDataForm.no2" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="SO2" prop="so2">
+          <el-input-number v-model="weatherDataForm.so2" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="O3" prop="o3">
+          <el-input-number v-model="weatherDataForm.o3" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
+        <el-form-item label="CO" prop="co">
+          <el-input-number v-model="weatherDataForm.co" :precision="2" :step="0.1" :max="99" />
+        </el-form-item>
         <div class="footer">
           <el-button type="primary" @click="submitForm(ruleFormRef)">
             确认
@@ -34,7 +93,11 @@ import { getNowWeather } from "@/api/weatherData"
 import { getAllStation } from "@/api/weatherStation"
 import { addWeather, batchDeleteWeather, deleteWeather, getPageWeather, updateWeather } from '@/api/weather/weatherData'
 
+const disableCollectDate = (date: { getTime: () => number }) => {
+  return date.getTime() > new Date().getTime()
+}
 
+const stationNoDisabled = ref(false)
 const dialogFormVisible = ref(false)
 const pwdDisabled = ref(false)
 const title = ref('')
@@ -44,33 +107,74 @@ let operateType = ''
 const ruleFormRef = ref<FormInstance>()
 
 interface WeatherDataForm {
+  dataId: string,
   stationNo: string,
   dataCollectTime: string,
-  temperature: string,
-  humidity: string,
-  pressure: string,
-  windSpeed: string,
+  temperature: number,
+  humidity: number,
+  pressure: number,
+  windSpeed: number,
   windDirection: string,
-  precipitation: string,
-  clouds: string,
-  visibility: string,
-  airQualityDesc: string,
-  aqi: string,
-  pm25: string,
-  pm10: string,
-  no2: string,
-  so2: string,
-  o3: string,
-  co:string,
+  precipitation: number,
+  clouds: number,
+  visibility: number,
+  aqi: number,
+  pm25: number,
+  pm10: number,
+  no2: number,
+  so2: number,
+  o3: number,
+  co: number,
 }
 
 const weatherDataForm = reactive<WeatherDataForm>({
+  dataId: '',
+  stationNo: '',
+  dataCollectTime: '',
+  temperature: 0.00,
+  humidity: 0.00,
+  pressure: 0.00,
+  windSpeed: 0.00,
+  windDirection: '',
+  precipitation: 0.00,
+  clouds: 0.00,
+  visibility: 0.00,
+  aqi: 0.00,
+  pm25: 0.00,
+  pm10: 0.00,
+  no2: 0.00,
+  so2: 0.00,
+  o3: 0.00,
+  co: 0.00,
 })
 
 const resetForm = () => {
+  weatherDataForm.stationNo = ''
+  weatherDataForm.dataCollectTime = ''
+  weatherDataForm.temperature = 0.00
+  weatherDataForm.humidity = 0.00
+  weatherDataForm.pressure = 0.00
+  weatherDataForm.windSpeed = 0.00
+  weatherDataForm.windDirection = ''
+  weatherDataForm.precipitation = 0.00
+  weatherDataForm.clouds = 0.00
+  weatherDataForm.visibility = 0.00
+  weatherDataForm.aqi = 0.00
+  weatherDataForm.pm25 = 0.00
+  weatherDataForm.pm10 = 0.00
+  weatherDataForm.no2 = 0.00
+  weatherDataForm.so2 = 0.00
+  weatherDataForm.o3 = 0.00
+  weatherDataForm.co = 0.00
 }
 
 const rules = reactive<FormRules<WeatherDataForm>>({
+  stationNo: [
+    { required: true, message: '请选择所属站点', trigger: 'change', },
+  ],
+  dataCollectTime: [
+    { required: true, message: '请选择采集时间', trigger: 'blur' },
+  ],
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -115,7 +219,7 @@ const addData = () => {
   title.value = '新增气象'
   operateType = 'add'
   dialogFormVisible.value = true
-  pwdDisabled.value = false
+  stationNoDisabled.value = false
   console.log('add')
 }
 
@@ -199,7 +303,25 @@ const editData = (row: any) => {
   title.value = '编辑气象'
   operateType = 'update'
   dialogFormVisible.value = true
-  pwdDisabled.value = true
+  stationNoDisabled.value = true
+  weatherDataForm.dataId = row.dataId
+  weatherDataForm.stationNo = row.stationNo
+  weatherDataForm.dataCollectTime = row.dataCollectTime
+  weatherDataForm.temperature = row.temperature
+  weatherDataForm.humidity = row.humidity
+  weatherDataForm.pressure = row.pressure
+  weatherDataForm.windSpeed = row.windSpeed
+  weatherDataForm.windDirection = row.windDirection
+  weatherDataForm.precipitation = row.precipitation
+  weatherDataForm.clouds = row.clouds
+  weatherDataForm.visibility = row.visibility
+  weatherDataForm.aqi = row.aqi
+  weatherDataForm.pm25 = row.pm25
+  weatherDataForm.pm10 = row.pm10
+  weatherDataForm.no2 = row.no2
+  weatherDataForm.so2 = row.so2
+  weatherDataForm.o3 = row.o3
+  weatherDataForm.co = row.co
 }
 
 const xGrid = ref<VxeGridInstance>()
@@ -587,17 +709,18 @@ const gridOptions = reactive<VxeGridProps>({
   },
 })
 
+const sexList = [
+  { label: '东北风', value: '0' },
+  { label: '东风', value: '1' },
+  { label: '东南风', value: '2' },
+  { label: '南风', value: '3' },
+  { label: '西南风', value: '4' },
+  { label: '西风', value: '5' },
+  { label: '西北风', value: '6' },
+  { label: '北风', value: '7' },
+]
+
 onMounted(() => {
-  const sexList = [
-    { label: '东北风', value: '0' },
-    { label: '东风', value: '1' },
-    { label: '东南风', value: '2' },
-    { label: '南风', value: '3' },
-    { label: '西南风', value: '4' },
-    { label: '西风', value: '5' },
-    { label: '西北风', value: '6' },
-    { label: '北风', value: '7' },
-  ]
   const { formConfig } = gridOptions
 
   if (formConfig && formConfig.items) {
@@ -620,4 +743,3 @@ function disabledDate({ date }: any) {
   text-align: center;
 }
 </style>
-

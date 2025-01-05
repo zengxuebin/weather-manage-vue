@@ -6,7 +6,6 @@
 import { ref, onMounted, onUnmounted, watch, markRaw } from 'vue'
 import * as echarts from 'echarts'
 import customTheme from './custom-theme.json'
-import JiangXi from "@/components/map/JiangXi.json"
 
 const chartRef = ref<HTMLDivElement>()
 const chartInstance = ref<echarts.ECharts>()
@@ -27,7 +26,6 @@ const props = defineProps({
 })
 
 echarts.registerTheme('customTheme', customTheme)
-echarts.registerMap('JiangXi', JiangXi)
 
 const initChart = () => {
   if (chartRef.value) {
@@ -55,7 +53,7 @@ onUnmounted(() => {
 watch(() => props.options, (newOptions) => {
   if (chartInstance.value) {
     chartInstance.value.setOption(newOptions)
-    console.log(props.options);
+    console.log("echarts debug:", props.options)
   }
 }, {
   deep: true

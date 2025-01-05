@@ -17,6 +17,20 @@ export function login(data: any) {
 }
 
 /**
+ * 修改密码
+ * 
+ * @param data oldPassword newPassword checkNewPassword
+ * @returns token 
+ */
+export function changePassword(data: any) {
+  return request({
+    method: 'post',
+    url: '/auth/changePassword',
+    data
+  })
+}
+
+/**
  * 获取验证码
  * @returns 验证码
  */

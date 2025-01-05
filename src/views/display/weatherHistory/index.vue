@@ -17,7 +17,8 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-dropdown trigger="click" @command="handleCommand" style="margin-left: 10px;" max-height="260" :disabled="disableCity">
+          <el-dropdown trigger="click" @command="handleCommand" style="margin-left: 10px;" max-height="260"
+            :disabled="disableCity">
             <span class="el-dropdown-link">
               {{ nowCity }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
             </span>
@@ -132,6 +133,9 @@
         <el-col>
           <TempEchart :options="tempOptions" height="200px"></TempEchart>
         </el-col>
+        <el-col>
+          <OtherEchart :options="otherOptions" height="400px"></OtherEchart>
+        </el-col>
         <el-col style="margin-top: 10px;">
           <vxe-table size="small" border max-height="250" :row-config="{ isHover: true }" :data="weatherStationList">
             <vxe-column type="seq" minWidth="60" title="序号" align="center"></vxe-column>
@@ -150,6 +154,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import TempEchart from "@/components/echarts/index.vue"
+import OtherEchart from "@/components/echarts/index.vue"
 import { getAllCity, getStationByCity } from "@/api/weatherStation"
 import { getHistoryStatistics } from "@/api/weatherHistory"
 import XEUtils from 'xe-utils'
@@ -205,10 +210,6 @@ const change = () => {
   getStatistics(nowCity.value, dateRange.value)
 }
 
-getStationByCity(nowCity.value).then(res => {
-  weatherStationList.value = res.data
-})
-
 const dateRange = ref<[Date, Date]>([
   new Date(new Date().getTime() - 60 * 24 * 60 * 60 * 1000),
   new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
@@ -226,6 +227,16 @@ const statistics = reactive({
 const historyDates = ref([Number])
 const maxTemps = ref([Number])
 const minTemps = ref([Number])
+const weatherData = ref([{
+  historyDate: '',
+  precipitation: 0.0,
+  visibility: 0.0,
+  windSpeed: 0.0,
+}])
+const dates = ref<string[]>([])
+const precipitationData = ref<Number[]>([])
+const visibilityData = ref<Number[]>([])
+const windSpeedData = ref<Number[]>([])
 
 const getStatistics = (nowCity: string, dateRange: any) => {
   const date = {
@@ -251,10 +262,27 @@ const getStatistics = (nowCity: string, dateRange: any) => {
       minTemps.value.push(item.minTemp);
     })
 
+    weatherData.value = res.historyDataList
+
+    console.log("historyDates.value", historyDates.value);
+
+
+    if (weatherData.value != null) {
+
+      // 提取各指标数据
+      weatherData.value.forEach((item: any) => {
+        dates.value.push(item.historyDate)
+        precipitationData.value.push(item.precipitation)
+        visibilityData.value.push(item.visibility)
+        windSpeedData.value.push(item.windSpeed)
+      })
+      console.log("dates.value:", dates.value)
+      console.log('Precipitation Data:', precipitationData.value) // 确认降水数据是否正确
+      console.log('Visibility Data:', visibilityData.value) // 确认能见度数据是否正确
+      console.log('Wind Speed Data:', windSpeedData.value) // 确认风速数据是否正确
+    }
   })
 }
-
-getStatistics(nowCity.value, dateRange.value)
 
 const disabledDate = (date: Date) => {
   return date.getTime() > new Date().getTime()
@@ -350,6 +378,51 @@ const tempOptions = {
     }
   ]
 }
+
+const otherOptions = ref({
+  title: {
+    text: '天气历史数据折线图'
+  },
+  tooltip: {
+    trigger: 'axis'
+  },
+  legend: {
+    data: ['降水量', '风速']
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  toolbox: {
+    feature: {
+      saveAsImage: {}
+    }
+  },
+  xAxis: {
+    type: 'category',
+    boundaryGap: false,
+    data: dates.value
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [
+    {
+      name: '降水量',
+      type: 'line',
+      stack: 'Total',
+      data: precipitationData.value
+    },
+    {
+      name: '风速',
+      type: 'line',
+      stack: 'Total',
+      data: windSpeedData.value
+    }
+  ]
+})
 </script>
 
 <style lang="scss" scoped>

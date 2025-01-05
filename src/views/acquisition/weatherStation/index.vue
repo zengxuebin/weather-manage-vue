@@ -64,6 +64,9 @@ import type { VXETable, VxeGridInstance, VxeGridProps } from 'vxe-table'
 import { provinceAndCityData } from 'element-china-area-data'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { addStation, batchDeleteStation, deleteStation, getPageStation, updateStation } from '@/api/weather/weatherStation';
+import useUserStore from '@/stores/user';
+
+const isAdmin = ref(false)
 
 // 省市联动
 const formData = reactive({
@@ -195,7 +198,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       console.log('submit!')
       const [no, city] = stationForm.stationCity.split('#');
       if (no && city) {
-        stationForm.stationNo = no + stationForm.stationType
+        let stationTypeCode = ''
+        if (stationForm.stationType == '一般站') {
+          stationTypeCode = '01'
+        } else if (stationForm.stationType == '基本站') {
+          stationTypeCode = '02'
+        } else if (stationForm.stationType == '基准站') {
+          stationTypeCode = '03'
+        }
+        stationForm.stationNo = no + stationTypeCode
         stationForm.stationCity = city
       }
       if (operateType === 'add') {
@@ -452,7 +463,7 @@ const gridOptions = reactive<VxeGridProps>({
   },
   toolbarConfig: {
     slots: {
-      buttons: 'toolbar_buttons'
+      buttons: 'toolbar_buttons',
     },
     refresh: true, // 显示刷新按钮
     export: true, // 显示导出按钮
@@ -582,6 +593,7 @@ const gridOptions = reactive<VxeGridProps>({
       align: "center",
       width: 200,
       fixed: 'right',
+      visible: isAdmin.value,
       slots: {
         default: 'operate'
       }
@@ -595,13 +607,14 @@ const gridOptions = reactive<VxeGridProps>({
 })
 
 onMounted(() => {
+
   const stationTypeList = [
     { label: '基准站', value: '基准站' },
     { label: '基本站', value: '基本站' },
     { label: '一般站', value: '一般站' },
   ]
 
-  const { formConfig } = gridOptions
+  const { formConfig, columns } = gridOptions
   if (formConfig && formConfig.items) {
     const stationTypeItem = formConfig.items[2]
     if (stationTypeItem && stationTypeItem.itemRender) {

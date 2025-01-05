@@ -172,26 +172,6 @@ export const routes = [
         component: () => import("@/views/system/user/index.vue"),
       },
       {
-        path: "/system/cache",
-        name: "Cache",
-        hidden: false,
-        meta: {
-          title: "字典预览",
-          icon: "vxe-icon-table",
-        },
-        component: () => import("@/views/monitor/cache/index.vue"),
-      },
-      {
-        path: "/system/menu",
-        name: "Menu",
-        hidden: false,
-        meta: {
-          title: "菜单预览",
-          icon: "vxe-icon-menu",
-        },
-        component: () => import("@/views/system/menu/index.vue"),
-      },
-      {
         path: "/system/role",
         name: "Role",
         hidden: false,
@@ -223,13 +203,9 @@ router.beforeEach((to, from, next) => {
           .then(() => {
             // 管理员标志
             isAdmin.value = useUserStore().roles[0];
-            useRouterStore()
-              .generateRoutes()
-              .then((routers: any) => {
-                routers.forEach((route: any) => {
-                  router.addRoute(route);
-                });
-              });
+            if (isAdmin.value != 'admin') {
+              routes.pop()
+            }
             next();
           });
       } else {

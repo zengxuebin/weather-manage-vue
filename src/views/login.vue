@@ -64,7 +64,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { getCodeImg } from '@/api/login'
+import { getCodeImg } from '@/api/auth'
 import useUserStore from '@/stores/user'
 import router from '@/router'
 import { encrypt } from "@/utils/secret"

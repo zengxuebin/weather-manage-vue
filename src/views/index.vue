@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-row :gutter="16">
-      <el-col :span="6">
+      <el-col :span="8">
         <div class="statistic-card">
-          <el-statistic :value="2">
+          <el-statistic :value=userCount>
             <template #title>
               <div style="display: inline-flex; align-items: center; font-size: 14px;">
-                今日活跃用户数量
-                <el-tooltip effect="dark" content="系统中今日登录过的用户数量" placement="top">
+                累计用户数量
+                <el-tooltip effect="dark" content="累计用户数量" placement="top">
                   <el-icon style="margin-left: 4px" :size="14">
                     <Warning />
                   </el-icon>
@@ -15,55 +15,15 @@
               </div>
             </template>
           </el-statistic>
-          <div class="statistic-footer">
-            <div class="footer-item">
-              <span>比昨日新增</span>
-              <span class="green">
-                0
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
-              </span>
-              人
-            </div>
-          </div>
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="8">
         <div class="statistic-card">
-          <el-statistic :value="338">
-            <template #title>
-              <div style="display: inline-flex; align-items: center; font-size: 14px;">
-                累计预警条数
-                <el-tooltip effect="dark" content="从2024年1月1日至今系统推送的预警信息数量" placement="top">
-                  <el-icon style="margin-left: 4px" :size="14">
-                    <Warning />
-                  </el-icon>
-                </el-tooltip>
-              </div>
-            </template>
-          </el-statistic>
-          <div class="statistic-footer">
-            <div class="footer-item">
-              <span>比昨日下降</span>
-              <span class="red">
-                56
-                <el-icon>
-                  <CaretBottom />
-                </el-icon>
-              </span>
-              条
-            </div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="statistic-card">
-          <el-statistic :value="111">
+          <el-statistic :value="stationCount">
             <template #title>
               <div style="display: inline-flex; align-items: center; font-size: 14px;">
                 累计气象站点
-                <el-tooltip effect="dark" content="从2024年1月1日至今系统存在的所有气象站点" placement="top">
+                <el-tooltip effect="dark" content="系统存在的所有气象站点" placement="top">
                   <el-icon style="margin-left: 4px" :size="14">
                     <Warning />
                   </el-icon>
@@ -71,27 +31,15 @@
               </div>
             </template>
           </el-statistic>
-          <div class="statistic-footer">
-            <div class="footer-item">
-              <span>比昨日新增</span>
-              <span class="green">
-                0
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
-              </span>
-              个
-            </div>
-          </div>
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="8">
         <div class="statistic-card">
-          <el-statistic :value="1238">
+          <el-statistic :value="weatherDataCount">
             <template #title>
               <div style="display: inline-flex; align-items: center; font-size: 14px;">
                 累计气象数据总数
-                <el-tooltip effect="dark" content="从2024年1月1日至今气象站点采集的所有气象数据总和" placement="top">
+                <el-tooltip effect="dark" content="气象站点采集的所有气象数据总和" placement="top">
                   <el-icon style="margin-left: 4px" :size="14">
                     <Warning />
                   </el-icon>
@@ -99,18 +47,6 @@
               </div>
             </template>
           </el-statistic>
-          <div class="statistic-footer">
-            <div class="footer-item">
-              <span>比昨日下降</span>
-              <span class="red">
-                123
-                <el-icon>
-                  <CaretBottom />
-                </el-icon>
-              </span>
-              条
-            </div>
-          </div>
         </div>
       </el-col>
     </el-row>
@@ -119,7 +55,7 @@
         <el-card class="today-card">
           <template #header>
             <div>
-              <span>今日天气速递</span>
+              <span>最新气象数据</span>
             </div>
           </template>
           <el-descriptions :column="1" border>
@@ -132,7 +68,7 @@
                   所在地点
                 </div>
               </template>
-              江西省南昌市
+              福建省泉州市
             </el-descriptions-item>
             <el-descriptions-item>
               <template #label>
@@ -143,7 +79,7 @@
                   今日日期
                 </div>
               </template>
-              2024-05-20
+              {{ formattedDate }}
             </el-descriptions-item>
             <el-descriptions-item>
               <template #label>
@@ -196,7 +132,7 @@
         <el-card class="today-card">
           <template #header>
             <div>
-              <span>24小时天气速递</span>
+              <span>最新气象数据速递</span>
             </div>
           </template>
           <TodayEcharts :options="options" height="260px"></TodayEcharts>
@@ -209,10 +145,31 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import TodayEcharts from '@/components/echarts/index.vue'
+import { getHomeInfo } from '@/api/home';
+
+// 定义一个响应式的日期变量
+const nowDate = ref(new Date());
+
+// 格式化日期为 yyyy-MM-dd
+const formattedDate = ref(formatDate(nowDate.value));
+
+function formatDate(date: Date) {
+  return date.toISOString().split('T')[0]; // 返回 yyyy-MM-dd 格式
+}
+
+const stationCount = ref(0);
+const userCount = ref(0);
+const weatherDataCount = ref(0);
+
+getHomeInfo().then(res => {
+  stationCount.value = res.stationCount
+  userCount.value = res.userCount
+  weatherDataCount.value = res.weatherDataCount
+})
 
 const options = {
   title: {
-    text: '2024-05-20'
+    text: formattedDate.value
   },
   tooltip: {
     trigger: 'axis',
@@ -259,7 +216,7 @@ const options = {
       name: '体感温度',
       type: 'line',
       data: [27.3, 27.7, 25.76, 25.41, 24.96, 24.65, 24.49, 24.4, 24.47, 24.47, 24.6,
-       25, 24.56, 24.28, 23.77, 23.12, 22.43, 21.68, 20.93, 20.16, 19.26, 19, 19, 19, 19, 19, 19, 19],
+        25, 24.56, 24.28, 23.77, 23.12, 22.43, 21.68, 20.93, 20.16, 19.26, 19, 19, 19, 19, 19, 19, 19],
       markPoint: {
         data: [
           { type: 'max', name: 'Max' },
@@ -275,8 +232,8 @@ const options = {
       name: '降水量',
       type: 'line',
       data: [0, 0.0834, 2.3787, 1.1157, 0.2295, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0.1201, 0.076, 0.2455, 0.0909, 0.1234, 0.0931],
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0.1201, 0.076, 0.2455, 0.0909, 0.1234, 0.0931],
       areaStyle: {},
       showSymbol: false,
       yAxisIndex: 1,
@@ -340,4 +297,5 @@ const options = {
 
 .descriptions {
   background-color: red;
-}</style>
+}
+</style>
